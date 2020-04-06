@@ -65,8 +65,8 @@ defmodule Botter.Bot do
         # delay
         :timer.sleep(delay * 600)
 
-        navigate_to("http://localhost:4000/welcome?g=#{ideology}&access_token=#{access_token}")
-        # navigate_to("https://networklab.onrender.com/welcome?g=#{ideology}&access_token=#{access_token}")
+        # navigate_to("http://localhost:4000/welcome?g=#{ideology}&access_token=#{access_token}")
+        navigate_to("https://networklab.onrender.com/welcome?g=#{ideology}&access_token=#{access_token}")
 
         tos1 = find_element(:id, "terms_of_service_1")
         click(tos1)

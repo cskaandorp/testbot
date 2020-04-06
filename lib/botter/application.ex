@@ -6,7 +6,7 @@ defmodule Botter.Application do
   def start(_type, _args) do
     { :ok, _ } = Application.ensure_all_started(:hound)
 
-    tokens_file = "data/session_4.csv"
+    tokens_file = "data/session_5.csv"
 
     # to get access and exit tokens
     tokens = case File.exists?(tokens_file) do
@@ -14,12 +14,12 @@ defmodule Botter.Application do
         _ -> nil
     end
 
-    n = 25
+    n = 20
 
     bots = 
       tokens
       |> Enum.map(fn [access, _exit] -> { access, Enum.random([1, 7]) } end)
-      |> Enum.slice(0, n)
+      |> Enum.slice(21, n)
 
     children = Enum.map Enum.with_index(bots), fn {{ access_token, ideology }, i} ->
       Supervisor.child_spec(
