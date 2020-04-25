@@ -1,3 +1,13 @@
+
+
+
+brew cask list
+brew cask list | grep chrome
+brew cask install chromedriver
+brew cask reinstall chromedriver
+
+
+
 # Botter
 
 1. install chrome-driver

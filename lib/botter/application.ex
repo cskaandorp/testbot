@@ -3,27 +3,30 @@ defmodule Botter.Application do
   alias Botter.Bot
   alias NimbleCSV.RFC4180, as: CSV
 
-  def start(_type, _args) do
+  def start(_type, args) do
+
     { :ok, _ } = Application.ensure_all_started(:hound)
 
-    tokens_file = "data/session_5.csv"
+    tokens_file = args[:tokens]
 
     # to get access and exit tokens
     tokens = case File.exists?(tokens_file) do
-        true -> read_csv_file(tokens_file)
-        _ -> nil
+      true -> read_csv_file(tokens_file)
+      _ -> nil
     end
 
-    n = 20
+    offset = args[:offset]
+    n = args[:n]
+    env = args[:env]
 
     bots = 
       tokens
       |> Enum.map(fn [access, _exit] -> { access, Enum.random([1, 7]) } end)
-      |> Enum.slice(21, n)
+      |> Enum.slice(offset, n)
 
     children = Enum.map Enum.with_index(bots), fn {{ access_token, ideology }, i} ->
       Supervisor.child_spec(
-        { Bot, %{ access_token: access_token, ideology: ideology, delay: n - 1 }}, 
+        { Bot, %{ access_token: access_token, ideology: ideology, delay: 0, env: env }}, 
         id: { Bot, i }, restart: :temporary
       )
     end

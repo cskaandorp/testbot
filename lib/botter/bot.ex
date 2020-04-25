@@ -14,7 +14,7 @@ defmodule Botter.Bot do
     def init(state) do
         # start a Hound session
         hound = Hound.Helpers.Session.start_session() 
-        Map.put_new(state, :hound, hound)
+        state = Map.put_new(state, :hound, hound)
         # start the game
         schedule_next_move()
         {:ok, state}
@@ -54,6 +54,7 @@ defmodule Botter.Bot do
 
     defp decide(state) do
         decision = Enum.random(["share", "discard"])
+        decision = "share"
         button = find_element(:css, "div.#{decision} button")
         click(button)
         state
@@ -61,12 +62,15 @@ defmodule Botter.Bot do
 
 
     defp signin(state) do
-        %{ access_token: access_token, ideology: ideology, delay: delay } = state
+        %{ access_token: access_token, ideology: ideology, delay: delay, env: env } = state
         # delay
-        :timer.sleep(delay * 600)
+        :timer.sleep(delay * 500)
 
-        # navigate_to("http://localhost:4000/welcome?g=#{ideology}&access_token=#{access_token}")
-        navigate_to("https://networklab.onrender.com/welcome?g=#{ideology}&access_token=#{access_token}")
+        if env == "local" do
+            navigate_to("http://localhost:4000/welcome?g=#{ideology}&access_token=#{access_token}")
+        else
+            navigate_to("https://networklab.onrender.com/welcome?g=#{ideology}&access_token=#{access_token}")
+        end
 
         tos1 = find_element(:id, "terms_of_service_1")
         click(tos1)
@@ -81,6 +85,7 @@ defmodule Botter.Bot do
         click(go_button)
 
         Map.put_new(state, :signed_in, true)
+
     end
 
 
