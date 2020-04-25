@@ -1,6 +1,6 @@
 defmodule Botter.Propositions do
 
-    def list_propositions() do
+    def get_propositions() do
         %{
             2 => %{
                 is_fake: true,

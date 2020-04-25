@@ -2,6 +2,8 @@ defmodule Botter.Bot do
     use GenServer
     use Hound.Helpers
 
+    alias Botter.Propositions
+
     def start_link(params) do
         GenServer.start_link(
             __MODULE__, 
@@ -53,12 +55,35 @@ defmodule Botter.Bot do
 
 
     defp decide(state) do
-        decision = Enum.random(["share", "discard"])
-        decision = "share"
+
+        element = find_element(:id, "prop-text")
+        prop_id = String.to_integer(attribute_value(element, "data-spec"))
+
+        all_props = Propositions.get_propositions()
+        prop = all_props[prop_id]
+
+        %{ ideology: my_ideology } = state
+        %{ ideology: prop_ideology, p_same_ideology: psi, p_diff_ideology: pdi } = prop
+
+        psi = psi + Enum.random([-0.1, 0, 0.1])
+        pdi = pdi + Enum.random([-0.1, 0, 0.1])
+
+        probability = case my_ideology == prop_ideology do
+            true -> [share: psi, discard: pdi]
+            false -> [share: pdi, discard: psi]
+        end
+
+        decision = get_choice(probability, :rand.uniform)
+        decision = Atom.to_string(decision)
+
         button = find_element(:css, "div.#{decision} button")
         click(button)
         state
     end
+
+    defp get_choice([{glyph,_}], _), do: glyph
+    defp get_choice([{glyph,prob}|_], ran) when ran < prob, do: glyph
+    defp get_choice([{_,prob}|t], ran), do: get_choice(t, ran - prob)
 
 
     defp signin(state) do
@@ -77,6 +102,11 @@ defmodule Botter.Bot do
 
         tos2 = find_element(:id, "terms_of_service_2")
         click(tos2)
+
+        # ideology = case ideology do
+        #     1 -> 4
+        #     7 -> 4
+        # end
 
         ideology = find_element(:id, "user_current_ideology_#{ideology}")
         click(ideology)
