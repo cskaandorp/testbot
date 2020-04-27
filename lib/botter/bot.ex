@@ -105,10 +105,10 @@ defmodule Botter.Bot do
         tos2 = find_element(:id, "terms_of_service_2")
         click(tos2)
 
-        ideology = case ideology do
-            1 -> 4
-            7 -> 4
-        end
+        # ideology = case ideology do
+        #     1 -> 4
+        #     7 -> 4
+        # end
 
         ideology = find_element(:id, "user_current_ideology_#{ideology}")
         click(ideology)
