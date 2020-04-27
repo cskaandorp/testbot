@@ -15,6 +15,10 @@ defmodule Botter.Bot do
     @impl true
     def init(state) do
         # start a Hound session
+        %{ delay: delay } = state
+        # delay
+        :timer.sleep(delay * 1000)
+        # start hound
         hound = Hound.Helpers.Session.start_session() 
         state = Map.put_new(state, :hound, hound)
         # start the game
@@ -87,9 +91,7 @@ defmodule Botter.Bot do
 
 
     defp signin(state) do
-        %{ access_token: access_token, ideology: ideology, delay: delay, env: env } = state
-        # delay
-        :timer.sleep(delay * 500)
+        %{ access_token: access_token, ideology: ideology, env: env } = state
 
         if env == "local" do
             navigate_to("http://localhost:4000/welcome?g=#{ideology}&access_token=#{access_token}")
@@ -103,10 +105,10 @@ defmodule Botter.Bot do
         tos2 = find_element(:id, "terms_of_service_2")
         click(tos2)
 
-        # ideology = case ideology do
-        #     1 -> 4
-        #     7 -> 4
-        # end
+        ideology = case ideology do
+            1 -> 4
+            7 -> 4
+        end
 
         ideology = find_element(:id, "user_current_ideology_#{ideology}")
         click(ideology)

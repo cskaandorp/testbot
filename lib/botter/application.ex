@@ -15,6 +15,7 @@ defmodule Botter.Application do
       _ -> nil
     end
 
+    delay = args[:delay]
     offset = args[:offset]
     n = args[:n]
     env = args[:env]
@@ -26,7 +27,7 @@ defmodule Botter.Application do
 
     children = Enum.map Enum.with_index(bots), fn {{ access_token, ideology }, i} ->
       Supervisor.child_spec(
-        { Bot, %{ access_token: access_token, ideology: ideology, delay: 0, env: env }}, 
+        { Bot, %{ access_token: access_token, ideology: ideology, env: env, delay: delay }}, 
         id: { Bot, i }, restart: :temporary
       )
     end
