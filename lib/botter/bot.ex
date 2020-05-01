@@ -72,10 +72,10 @@ defmodule Botter.Bot do
         psi = psi + (:rand.uniform * Enum.random([-0.1, 0.1]))
         pdi = pdi + (:rand.uniform * Enum.random([-0.1, 0.1]))
 
-        # probability = case my_ideology == prop_ideology do
-        #     true -> [share: psi, discard: 1 - psi]
-        #     false -> [share: pdi, discard: 1 - pdi]
-        # end
+        probability = case my_ideology == prop_ideology do
+            true -> [share: psi, discard: 1 - psi]
+            false -> [share: pdi, discard: 1 - pdi]
+        end
 
         decision = get_choice(probability, :rand.uniform)
         decision = Atom.to_string(decision)
@@ -105,10 +105,10 @@ defmodule Botter.Bot do
         tos2 = find_element(:id, "terms_of_service_2")
         click(tos2)
 
-        ideology = case ideology do
-            1 -> 4
-            7 -> 4
-        end
+        # ideology = case ideology do
+        #     1 -> 4
+        #     7 -> 4
+        # end
 
         ideology = find_element(:id, "user_current_ideology_#{ideology}")
         click(ideology)
