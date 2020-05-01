@@ -22,7 +22,8 @@ defmodule Botter.Application do
 
     bots = 
       tokens
-      |> Enum.map(fn [access, _exit] -> { access, Enum.random([1, 7]) } end)
+      |> Enum.with_index()
+      |> Enum.map(fn {[access, _exit], index} -> { access, determine_ideology(index) } end)
       |> Enum.slice(offset, n)
 
     children = Enum.map Enum.with_index(bots), fn {{ access_token, ideology }, i} ->
@@ -37,6 +38,16 @@ defmodule Botter.Application do
     opts = [strategy: :one_for_one, name: Botter.Supervisor]
     # Supervisor.start_link(children, opts)
     Supervisor.start_link(children, opts)
+  end
+
+  defp determine_ideology(index) do
+    # Enum.random([1, 7])
+
+    mod = rem(index, 2)
+    case mod == 0 do
+      true -> 1
+      false -> 7
+    end
   end
 
 

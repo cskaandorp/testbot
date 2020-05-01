@@ -80,6 +80,8 @@ defmodule Botter.Bot do
         decision = get_choice(probability, :rand.uniform)
         decision = Atom.to_string(decision)
 
+        decision = "share"
+
         button = find_element(:css, "div.#{decision} button")
         click(button)
         state
