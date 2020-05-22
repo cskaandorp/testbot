@@ -15,6 +15,7 @@ brew cask reinstall chromedriver
 $ chromedriver
 3. start bots:
 /botter $ iex -S mix
+> mix start --env=local --tokens=./session_8.csv --delay=0 0 18
 
 
 **TODO: Add description**
